@@ -1,6 +1,7 @@
 <template>
   <div id="container">
     <div class="head">
+      <el-button type="info" plain @click="modifyParam()">修改参数</el-button>
       <el-button type="primary" plain @click="start()">开始</el-button>
       <el-button type="success" plain @click="suspend()">暂停</el-button>
       <el-button type="danger" plain @click="stop()">结束</el-button>
@@ -80,6 +81,9 @@
         </div>
       </div>
     </div>
+
+
+    
   </div>
 </template>
 
@@ -145,6 +149,9 @@ export default {
   },
 
   methods: {
+    modifyParam(){
+
+    },
     resetComputerAndTerminalNumber() {
       this.computerNumber = {
         susceptible: 500,
