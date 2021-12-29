@@ -82,17 +82,22 @@
       </div>
     </div>
 
-
-    
+    <param-dialog></param-dialog>
   </div>
 </template>
 
 <script>
 import { Computer } from "@/model/computer.js";
 import { Terminal } from "@/model/terminal.js";
-import { EState } from "@/util/enum";
+import { EState, EEvent } from "@/util/enum";
+import paramdialog from '../../components/param_dialog.vue';
+import Event from '@/util/event.js';
+import ModelParam from '@/util/modelparam.js';
 
 export default {
+  components: {
+    ParamDialog: paramdialog,
+  },
   created() {
     this.initComputerMapAndTerminalMap();
   },
@@ -140,8 +145,8 @@ export default {
         explosive: 200,
       },
       EState: EState,
-      connectNetworkComputerNumberPerInterval: 30,
-      connectNetworkTerminalNumberPerInterval: 30,
+      connectNetworkComputerNumberPerInterval: ModelParam.computerBornNumber,
+      connectNetworkTerminalNumberPerInterval: ModelParam.terminalBornNumber,
       timer: "",
       interval: 1000,
       serialNumber: 1,
@@ -149,8 +154,8 @@ export default {
   },
 
   methods: {
-    modifyParam(){
-
+    modifyParam() {
+      Event.$emit(EEvent.DIALOG_VISIBLE);
     },
     resetComputerAndTerminalNumber() {
       this.computerNumber = {
@@ -234,7 +239,7 @@ export default {
         const iterateComputers = (computer) => {
           if (computer.isConnect) {
             if (computer.state === EState.SUSCEPTIBLE) {
-              // 
+              //
               computer.infect(this.computerNumber, this.terminalNumber);
             } else if (computer.state === EState.INFECTED) {
               computer.immunte(this.computerNumber);

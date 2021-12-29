@@ -6,9 +6,7 @@ import {
     contactInfectionRate
 } from "../util/rate";
 
-const networkDisconnectRate = 0.5;
-const explosiveRate = 0.5;
-const cureRate = 0.3;
+import ModelParam from "../util/modelparam";
 
 export class Terminal {
 
@@ -24,7 +22,7 @@ export class Terminal {
 
         if (this.state === EState.SUSCEPTIBLE) {
 
-            const terminalUninfectRate = Math.pow(1 - contactInfectionRate, computerNumber.infected);
+            const terminalUninfectRate = Math.pow(1 - ModelParam.contactInfectionRate, computerNumber.infected);
             const terminalInfectRate = 1 - terminalUninfectRate;
             const result = isTransform(terminalInfectRate);
             if (result) {
@@ -39,7 +37,7 @@ export class Terminal {
 
         if (this.state === EState.LATENT) {
 
-            const result = isTransform(explosiveRate);
+            const result = isTransform(ModelParam.explosiveRate);
             if (result) {
                 this.state = EState.EXPLOSIVE;
                 terminalNumber.latent --;
@@ -50,7 +48,7 @@ export class Terminal {
 
     disconnectNetwork(terminalMap, terminalNumber) {
 
-        const result = isTransform(networkDisconnectRate);
+        const result = isTransform(ModelParam.terminalNetworkDisconnectRate);
         if (result) {
 
             if (this.state === EState.SUSCEPTIBLE) terminalNumber.susceptible --;
@@ -67,7 +65,7 @@ export class Terminal {
 
         if (this.state === EState.LATENT || this.state === EState.EXPLOSIVE) {
 
-            const terminalUncureRate = Math.pow(1 - cureRate, computerNumber.immunte);
+            const terminalUncureRate = Math.pow(1 - ModelParam.cureRate, computerNumber.immunte);
             const terminalCureRate = 1 - terminalUncureRate;
             const result = isTransform(terminalCureRate);
 
