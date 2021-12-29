@@ -6,3 +6,7 @@ export const EState = {
     EXPLOSIVE: 5,
     DISCONNECT: 6,
 }
+
+export const EEvent = {
+    DIALOG_VISIBLE: 'dialog_visible',
+}

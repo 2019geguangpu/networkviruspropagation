@@ -18,5 +18,6 @@ html,body,#app{
   font-size: 10px;
   font-family: 'Times New Roman', Times, serif;
   background-color: white;
+  color: black;
 }
 </style>
