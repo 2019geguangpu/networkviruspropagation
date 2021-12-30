@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "echarts": "^5.2.2",
     "element-ui": "^2.15.6",
     "events": "^3.3.0",
     "katex": "^0.15.1",

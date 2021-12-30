@@ -41,6 +41,9 @@
         </div>
       </div>
 
+      <div class="chart">
+        <my-chart></my-chart>
+      </div>
       <div class="graphic">
         <div
           class="computerImg"
@@ -89,14 +92,16 @@
 <script>
 import { Computer } from "@/model/computer.js";
 import { Terminal } from "@/model/terminal.js";
-import { EState, EEvent } from "@/util/enum";
-import paramdialog from '../../components/param_dialog.vue';
-import Event from '@/util/event.js';
-import ModelParam from '@/util/modelparam.js';
+import { EState, EEvent, ECommand } from "@/util/enum";
+import paramdialog from "../../components/param_dialog.vue";
+import Event from "@/util/event.js";
+import ModelParam from "@/util/modelparam.js";
+import mychart from "@/components/chart/index.vue";
 
 export default {
   components: {
     ParamDialog: paramdialog,
+    MyChart: mychart,
   },
   created() {
     this.initComputerMapAndTerminalMap();
@@ -145,11 +150,10 @@ export default {
         explosive: 200,
       },
       EState: EState,
-      connectNetworkComputerNumberPerInterval: ModelParam.computerBornNumber,
-      connectNetworkTerminalNumberPerInterval: ModelParam.terminalBornNumber,
       timer: "",
       interval: 1000,
       serialNumber: 1,
+      timerCounter: 0,
     };
   },
 
@@ -230,12 +234,24 @@ export default {
         throw new Error("请注意this");
       }
     },
+    sendBarnRoomsNumberToChart(command) {
+      Event.$emit(
+        EEvent.SET_CHART_DATA,
+        command,
+        this.timerCounter++,
+        this.computerNumber,
+        this.terminalNumber
+      );
+    },
     start() {
       console.log("开始演化");
 
       if (this.timer) return;
 
       const handler = () => {
+
+        this.sendBarnRoomsNumberToChart(ECommand.NO_COMMAND);
+
         const iterateComputers = (computer) => {
           if (computer.isConnect) {
             if (computer.state === EState.SUSCEPTIBLE) {
@@ -252,7 +268,7 @@ export default {
         this.computers.forEach(iterateComputers);
 
         if (this == window) console.log("作用域已是全局！！！！！");
-        for (let i = 0; i < this.connectNetworkComputerNumberPerInterval; i++) {
+        for (let i = 0; i < ModelParam.computerBornNumber; i++) {
           const computer = new Computer(
             this.serialNumber,
             true,
@@ -284,7 +300,7 @@ export default {
 
         this.terminals.forEach(iterateTerminals);
 
-        for (let i = 0; i < this.connectNetworkTerminalNumberPerInterval; i++) {
+        for (let i = 0; i < ModelParam.terminalBornNumber; i++) {
           const terminal = new Terminal(
             this.serialNumber,
             true,
@@ -293,11 +309,6 @@ export default {
 
           this.$set(this.terminalMap, this.serialNumber++, terminal);
           this.terminalNumber.susceptible++;
-        }
-
-        if (this.computerNumber.infected === 0) {
-          window.clearInterval(this.timer);
-          this.timer = null;
         }
       };
 
@@ -308,12 +319,14 @@ export default {
       if (!this.timer) return;
       window.clearInterval(this.timer);
       this.timer = null;
+      this.sendBarnRoomsNumberToChart(ECommand.NO_COMMAND);
     },
     stop() {
       console.log("结束演化");
       if (!this.timer) return;
       window.clearInterval(this.timer);
       this.timer = null;
+      this.sendBarnRoomsNumberToChart(ECommand.STOP);
       this.computers.splice(0, this.computers.length);
       this.terminals.splice(0, this.terminals.length);
       this.computerMap = {};
@@ -371,5 +384,9 @@ export default {
   flex-flow: row wrap;
   justify-content: space-around;
   align-items: center;
+}
+.chart {
+  width: 100%;
+  margin-top: 1rem;
 }
 </style>
