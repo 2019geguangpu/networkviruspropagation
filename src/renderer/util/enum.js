@@ -9,4 +9,11 @@ export const EState = {
 
 export const EEvent = {
     DIALOG_VISIBLE: 'dialog_visible',
+    SET_CHART_DATA: 'set_chart_data',
+}
+
+export const ECommand = {
+    START: 'start',
+    STOP: 'stop',
+    NO_COMMAND: 'no_command'
 }

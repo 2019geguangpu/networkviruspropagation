@@ -2,8 +2,7 @@ import {
     EState
 } from "../util/enum";
 import {
-    isTransform,
-    contactInfectionRate
+    isTransform
 } from "../util/rate";
 
 import ModelParam from "../util/modelparam";
